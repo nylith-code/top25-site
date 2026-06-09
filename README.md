@@ -19,12 +19,13 @@ is never served — only the contents of `docs/` are published.
 bun run build:site
 
 # then mirror dist/ into docs/ here (clean copy so stale hashed bundles drop out)
-rsync -a --delete --exclude=.git \
+rsync -a --delete --exclude=CNAME --exclude=.nojekyll \
   ../top25/dist/ docs/
 
 git add -A && git commit -m "Deploy site" && git push
 ```
 
 `docs/` must always contain `CNAME` (the custom domain) and `.nojekyll` (serve
-files as-is, no Jekyll). The `top25` build emits both into `dist/`, so the
-`--delete` mirror above keeps them in place.
+files as-is, no Jekyll). These are committed here, not produced by the build —
+so the mirror excludes them, and `--delete` leaves them untouched while dropping
+stale hashed bundles from previous builds.
